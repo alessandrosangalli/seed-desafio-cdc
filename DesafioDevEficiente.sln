@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DesafioDevEficiente", "DesafioDevEficiente\DesafioDevEficiente.fsproj", "{6BD13714-6A5A-4B9E-9A4E-D15812BFF0EF}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DesafioDevEficiente.Tests", "DesafioDevEficiente.Tests\DesafioDevEficiente.Tests.fsproj", "{267868FE-E820-4ECF-9EE3-2F54338177E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6BD13714-6A5A-4B9E-9A4E-D15812BFF0EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BD13714-6A5A-4B9E-9A4E-D15812BFF0EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BD13714-6A5A-4B9E-9A4E-D15812BFF0EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{267868FE-E820-4ECF-9EE3-2F54338177E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{267868FE-E820-4ECF-9EE3-2F54338177E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{267868FE-E820-4ECF-9EE3-2F54338177E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{267868FE-E820-4ECF-9EE3-2F54338177E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
