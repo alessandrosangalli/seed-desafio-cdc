@@ -3,7 +3,7 @@ module AuthorControllerTests
 open System
 open Xunit
 open DesafioDevEficiente.Controllers
-open DesafioDevEficiente.Dtos
+open DesafioDevEficiente.ControllerDtos
 open Microsoft.Extensions.Logging
 open Microsoft.AspNetCore.Mvc
 open AccidentalFish.FSharp.Validation

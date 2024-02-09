@@ -1,7 +1,7 @@
 ﻿module Validators
 
 open AccidentalFish.FSharp.Validation
-open DesafioDevEficiente.Dtos
+open DesafioDevEficiente.ControllerDtos
 open System.Text.RegularExpressions
 
 let validateAuthor = createValidatorFor<CreateAuthorDto>() {

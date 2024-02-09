@@ -1,4 +1,4 @@
-﻿module DesafioDevEficiente.Dtos
+﻿module DesafioDevEficiente.ControllerDtos
 
 open System
 
