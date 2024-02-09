@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <Compile Include="WeatherForecast.fs" />
+    <Compile Include="Controllers\Dtos.fs" />
+    <Compile Include="Controllers\Validators.fs" />
     <Compile Include="Controllers\AuthorController.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
