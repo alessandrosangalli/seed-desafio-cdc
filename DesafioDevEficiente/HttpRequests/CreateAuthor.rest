@@ -2,7 +2,7 @@ POST https://localhost:7023/author
 content-type: application/json
 
 {
-    "email" : 123,
+    "email" : "valid@mail.com",
     "name" : "John Doe",
     "description" : "My description" 
 }
