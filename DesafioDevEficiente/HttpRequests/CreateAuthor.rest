@@ -1,0 +1,8 @@
+POST https://localhost:7023/author
+content-type: application/json
+
+{
+    "email" : 123,
+    "name" : "John Doe",
+    "description" : "My description" 
+}

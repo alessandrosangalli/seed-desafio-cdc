@@ -8,10 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="WeatherForecast.fs" />
-    <Compile Include="Controllers\ControllerDtos.fs" />
-    <Compile Include="Controllers\Validators.fs" />
-    <Compile Include="Controllers\AuthorController.fs" />
+    <Compile Include="Src\Presentation\Dtos\ControllerDtos.fs" />
+    <Compile Include="Src\Presentation\Validators\Validators.fs" />
+    <Compile Include="Src\Presentation\Controllers\AuthorController.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
