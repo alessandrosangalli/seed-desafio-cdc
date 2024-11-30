@@ -1,11 +1,11 @@
 ﻿module Validators
 
 open AccidentalFish.FSharp.Validation
-open DesafioDevEficiente.ControllerDtos
+open DesafioDevEficiente.ControllerInputs
 open System.Text.RegularExpressions
 
 let validateAuthor =
-    createValidatorFor<CreateAuthorDto> () {
+    createValidatorFor<CreateAuthorControllerInput> () {
         validate (fun o -> o.email) [ isNotNull ]
         validate (fun o -> o.name) [ isNotEmpty ]
         validate (fun o -> o.description) [ isNotEmpty ]

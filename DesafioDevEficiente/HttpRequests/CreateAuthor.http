@@ -1,5 +1,5 @@
-POST https://localhost:7023/author
-content-type: application/json
+POST http://localhost:5169/author
+Content-Type: application/json
 
 {
     "email" : "valid@mail.com",

@@ -3,10 +3,12 @@ module AuthorControllerTests
 open System
 open Xunit
 open DesafioDevEficiente.Controllers
-open DesafioDevEficiente.ControllerDtos
+open DesafioDevEficiente.ControllerInputs
 open Microsoft.Extensions.Logging
 open Microsoft.AspNetCore.Mvc
 open AccidentalFish.FSharp.Validation
+open DesafioDevEficiente.UseCases
+open DesafioDevEficiente.UseCases.Error
 
 let DisposableStub =
     { new IDisposable with
@@ -27,14 +29,21 @@ let LoggerStub =
             ) =
             () }
 
+let CreateAuthorUseCaseStub =
+    { new ICreateAuthorUseCase with
+        member x.Execute(createAuthorUseCaseInput: CreateAuthorUseCaseModels.Input): Either<CreateAuthorError, unit> =
+            Right()
+            }
+            
+
 [<Fact>]
 let ``Valid dto`` () =
-    let createAuthorDto =
+    let createAuthorDto: CreateAuthorControllerInput =
         { email = "valid@mail.com"
           name = "John Doe"
           description = "My description" }
 
-    let authorController = new AuthorController(LoggerStub)
+    let authorController = new AuthorController(LoggerStub, CreateAuthorUseCaseStub)
 
     let result = authorController.Post(createAuthorDto) :?> OkResult
 
@@ -42,7 +51,7 @@ let ``Valid dto`` () =
 
 [<Fact>]
 let ``Email can't be empty`` () =
-    let createAuthorDto =
+    let createAuthorDto: CreateAuthorControllerInput =
         { email = ""
           name = "John Doe"
           description = "My description" }
@@ -50,12 +59,9 @@ let ``Email can't be empty`` () =
     let expectedValidationError: List<ValidationItem> =
         [ { errorCode = "Must be a valid email"
             message = "email"
-            property = "isNotValidFormat" }
-          { message = "Must not be empty"
-            property = "email"
-            errorCode = "isNotEmpty" } ]
+            property = "isNotValidFormat" }]
 
-    let authorController = new AuthorController(LoggerStub)
+    let authorController = new AuthorController(LoggerStub, CreateAuthorUseCaseStub)
 
     let result = authorController.Post(createAuthorDto) :?> BadRequestObjectResult
 
@@ -64,7 +70,7 @@ let ``Email can't be empty`` () =
 
 [<Fact>]
 let ``Email must be in a valid format`` () =
-    let createAuthorDto =
+    let createAuthorDto: CreateAuthorControllerInput =
         { email = "@invalid.com@mail"
           name = "John Doe"
           description = "My description" }
@@ -74,7 +80,7 @@ let ``Email must be in a valid format`` () =
             message = "email"
             property = "isNotValidFormat" } ]
 
-    let authorController = new AuthorController(LoggerStub)
+    let authorController = new AuthorController(LoggerStub, CreateAuthorUseCaseStub)
 
     let result = authorController.Post(createAuthorDto) :?> BadRequestObjectResult
 
@@ -83,7 +89,7 @@ let ``Email must be in a valid format`` () =
 
 [<Fact>]
 let ``Name can't be empty`` () =
-    let createAuthorDto =
+    let createAuthorDto: CreateAuthorControllerInput =
         { email = "valid@mail.com"
           name = ""
           description = "My description" }
@@ -93,7 +99,7 @@ let ``Name can't be empty`` () =
             property = "name"
             errorCode = "isNotEmpty" } ]
 
-    let authorController = new AuthorController(LoggerStub)
+    let authorController = new AuthorController(LoggerStub, CreateAuthorUseCaseStub)
 
     let result = authorController.Post(createAuthorDto) :?> BadRequestObjectResult
 
@@ -102,7 +108,7 @@ let ``Name can't be empty`` () =
 
 [<Fact>]
 let ``Description can't be empty`` () =
-    let createAuthorDto =
+    let createAuthorDto: CreateAuthorControllerInput =
         { email = "valid@mail.com"
           name = "John Doe"
           description = "" }
@@ -112,7 +118,7 @@ let ``Description can't be empty`` () =
             property = "description"
             errorCode = "isNotEmpty" } ]
 
-    let authorController = new AuthorController(LoggerStub)
+    let authorController = new AuthorController(LoggerStub, CreateAuthorUseCaseStub)
 
     let result = authorController.Post(createAuthorDto) :?> BadRequestObjectResult
 
@@ -121,7 +127,7 @@ let ``Description can't be empty`` () =
 
 [<Fact>]
 let ``Description can't be greater than 400`` () =
-    let createAuthorDto =
+    let createAuthorDto: CreateAuthorControllerInput =
         { email = "valid@mail.com"
           name = "John Doe"
           description =
@@ -132,9 +138,31 @@ let ``Description can't be greater than 400`` () =
             property = "description.Length"
             errorCode = "isLessThanOrEqualTo" } ]
 
-    let authorController = new AuthorController(LoggerStub)
+    let authorController = new AuthorController(LoggerStub, CreateAuthorUseCaseStub)
 
     let result = authorController.Post(createAuthorDto) :?> BadRequestObjectResult
 
     Assert.Equal(400, result.StatusCode.Value)
     Assert.Equal<List<ValidationItem>>(expectedValidationError, result.Value |> unbox)
+
+[<Fact>]
+let ``Author's email is unique`` () =
+    let createAuthorDto: CreateAuthorControllerInput =
+        { email = "duplicated@mail.com"
+          name = "John Doe"
+          description =
+            "my description" }
+    
+    let CreateAuthorUseCaseStubWithDuplicatedEmail =
+        { new ICreateAuthorUseCase with
+            member x.Execute(createAuthorUseCaseInput: CreateAuthorUseCaseModels.Input): Either<CreateAuthorError, unit> =
+                Left CreateAuthorErrorUtil.duplicatedEmail
+                }
+
+    let authorController = new AuthorController(LoggerStub, CreateAuthorUseCaseStubWithDuplicatedEmail)
+
+    authorController.Post(createAuthorDto) |> ignore
+    let result = authorController.Post(createAuthorDto) :?> ConflictObjectResult
+
+    Assert.Equal(409, result.StatusCode.Value)
+
